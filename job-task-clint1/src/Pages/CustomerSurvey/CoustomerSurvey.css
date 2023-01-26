@@ -1,0 +1,15 @@
+.box{
+    text-align: center;
+  width: 550px;
+  min-height: 200px;
+  height: min-content;
+  transform: translate(-50%, 50%);
+  border-radius: 15px;
+  box-shadow: 10px 10px 42px 0px rgba(0, 0, 0, 0.75);
+  display: flex;
+  flex-direction: column;
+  background-color: whitesmoke;
+  position: relative;
+  top: 5%;
+  left: 50%;
+}
