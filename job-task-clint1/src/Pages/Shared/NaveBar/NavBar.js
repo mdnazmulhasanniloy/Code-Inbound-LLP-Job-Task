@@ -1,18 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Link } from 'react-router-dom';
 import { FaUserTie } from 'react-icons/fa';
+import { AuthContext } from '../../../AuthProvider/AuthProvider';
+import { Image } from 'react-bootstrap';
 
 const NavBar = () => {
-  
+    const {user, userLogout} = useContext(AuthContext);
 
 
-    // const HandelToSignout = () =>{
-    //   userLogout()
+    const HandelToSignout = () =>{
+      userLogout()
 
-    // }
+    }
 
 
   
@@ -33,25 +35,24 @@ const NavBar = () => {
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                   <Nav className="me-auto">
-                    <Link className='nav-link' to='/'>Order</Link>
+                    <Link className='nav-link' to='/'>Items</Link>
                     <Link className='nav-link' to='/customarySurvey'>Customary Survey</Link>
-                    <Link className='nav-link' to="/blog">Blog</Link>
                     
                   </Nav>
                   <Nav>
                   
                   
-                    <Nav>
+                    <Nav className='d-flex align-items-center'>
                     {
-                        // user?.uid?
-                        //     <Nav.Link className='nav-link mx-2 ' onClick={HandelToSignout}>Sign Out</Nav.Link>
-                        //      : <Link className='nav-link mx-2' to="/login">Login</Link>
+                        user?.uid?
+                            <Nav.Link className='nav-link mx-2 ' onClick={HandelToSignout}>Sign Out</Nav.Link>
+                             : <Link className='nav-link mx-2' to="/login">Login</Link>
                     }
                     </Nav>
                     <Nav.Link>
                           {
-                        //     user?.uid? <Image height='35' width='35' className='header-img'   src={user?.photoURL} title={user?.displayName} roundedCircle	/>
-                           <FaUserTie className='fs-3' />
+                            user?.uid? <Image height='45' width='45' className='header-img border border-3 border-success'   src={user?.photoURL} title={user?.displayName} roundedCircle	/>
+                           :<FaUserTie className='fs-3' />
                           }
                     </Nav.Link>
                   </Nav>

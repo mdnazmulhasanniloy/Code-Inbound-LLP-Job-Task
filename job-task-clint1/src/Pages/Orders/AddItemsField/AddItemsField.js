@@ -4,21 +4,21 @@ import Form from 'react-bootstrap/Form';
 import { toast } from 'react-hot-toast';
 import './AddItemsField.css'
 
-const AddItemsField = ({setAddItems, register}) => {
+const AddItemsField = ({setAddItems, items}) => {
     
     
-    const [rate, setRate] = useState(null);
-    const [basicCost, setBasicCost] = useState(null);
-    const [quantity, setQuantity] = useState(null);
-    const [discount, setDiscount] = useState(null);
-    const [discountAmt, setDiscountAmt] = useState(null);
-    const [finalBasicCost, setFinalBasicCost] = useState(null);
-    const [texes, setTexes] = useState(null);
-    const [taxesAmt, setTaxesAmt] = useState(null);
-    const [totalCost, setTotalCost] = useState(null);
+    const [rate, setRate] = useState(0);
+    const [basicCost, setBasicCost] = useState(0);
+    const [quantity, setQuantity] = useState(0);
+    const [discount, setDiscount] = useState(0);
+    const [discountAmt, setDiscountAmt] = useState(0);
+    const [finalBasicCost, setFinalBasicCost] = useState(0);
+    const [texes, setTexes] = useState(0);
+    const [taxesAmt, setTaxesAmt] = useState(0);
+    const [totalCost, setTotalCost] = useState(0);
     
 
-
+        const SlNo = items.length + 1;
 
 
 
@@ -26,13 +26,15 @@ const AddItemsField = ({setAddItems, register}) => {
     function basicCosts(rate, quantity) {
         const newCost = rate * quantity;
         setBasicCost(newCost)
+        
     }
 
     //discount amt calculation
     function DiscountAmount(basicCost, discount) {
 
         const newDiscountAmt = basicCost * discount / 100 ;
-        setDiscountAmt(newDiscountAmt)
+        setDiscountAmt(newDiscountAmt);
+        finalBasicCostAmount(basicCost, newDiscountAmt);
 
     }
 
@@ -43,10 +45,14 @@ const AddItemsField = ({setAddItems, register}) => {
             setFinalBasicCost(newFinalBasicCost)
     }
     // final basic cost calculation
-    function  finalTaxesAmount( basicCost, texes ){
+    function  finalTaxesAmount( finalBasicCost, texes ){
 
-            const newTaxesAmt= basicCost * texes / 100;
+            const newTaxesAmt = finalBasicCost * texes / 100;
             setTaxesAmt(newTaxesAmt);
+
+            //total cost 
+            const NweTotalCost = basicCost + taxesAmt;
+            setTotalCost(NweTotalCost)
     }
 
 
@@ -57,27 +63,27 @@ const AddItemsField = ({setAddItems, register}) => {
         
         const input = e.target.value;
         const pattern = /^[0-9]*$/;
-        // if(pattern.test(input)){
-        //     setRate(input);
-        // }else{
-        //     toast.error('Please enter a number type value.')
-        // }
+        if(pattern.test(input)){
+            setRate(input);
+        }else{
+            toast.error('Please enter a number type value.')
+        }
         setRate(input);
        
     }
     const handelQuantityInput = e => {
         
         const input = e.target.value;
-        // const pattern = /^[0-9]*$/;
-        // if(pattern.test(input)){
+        const pattern = /^[0-9]*$/;
+        if(pattern.test(input)){
             
-        //     setQuantity(input);
-        //     basicCosts(rate, quantity)
-        // }else{
-        //     toast.error('Please enter a number type value.')
-        // }
+            setQuantity(input);
+            basicCosts(rate, input)
+        }else{
+            toast.error('Please enter a number type value.')
+        }
         setQuantity(input);
-        basicCosts(rate, quantity)
+        basicCosts(rate, input)
         
     }
 
@@ -90,7 +96,7 @@ const AddItemsField = ({setAddItems, register}) => {
         if(pattern.test(input)){
             
             setDiscount(input);
-            DiscountAmount(basicCost, discount);
+            DiscountAmount(basicCost, input);
             
         }else{
             toast.error('Please enter a number type value.')
@@ -106,54 +112,47 @@ const AddItemsField = ({setAddItems, register}) => {
         if(pattern.test(input)){
             
             setTexes(input);
-            finalTaxesAmount( basicCost, texes );
-
-            //total cost 
-            const NweTotalCost = basicCost + taxesAmt;
-            setTotalCost(NweTotalCost)
+            finalTaxesAmount( finalBasicCost, input );
         }else{
             toast.error('Please enter a number type value.')
         }
     }
 
-    console.log(basicCost, rate);
 
-    
-    const handelChange = e => {}
     return (
         <tr>
             <td>
-
+                    {SlNo}
             </td>
             <td>
-                <Form.Control type="text" {...register("ItemName")} placeholder="Item Name" />
+                <Form.Control type="text" name='itemName'  required placeholder="Item Name" />
             </td>
             <td>
-                <Form.Control type="text" name='rate' {...register("Rate")} onChange={handelRateInput} value={rate} placeholder="Rate" />
+                <Form.Control type="text" name='rate' onChange={handelRateInput} required placeholder="Rate" />
             </td>
             <td>
-                <Form.Control type="text" name='quantity' {...register("Quantity")} onChange={handelQuantityInput} value={quantity}  placeholder="Quantity" />
+                <Form.Control type="text" name='quantity' onChange={handelQuantityInput} required placeholder="Quantity" />
             </td>
             <td>
-            <Form.Control type="text" className='default-inputField' value={basicCost}   {...register("BasicCost")} readOnly />
+            <Form.Control type="text" name='basicCost' className='default-inputField' value={basicCost} readOnly />
             </td>
             <td>
-                <Form.Control type="text" name='discount' {...register("Discount")} onChange={handelDiscountInput} value={discount} placeholder="Discount (%)" />
+                <Form.Control type="text" name='discount' onChange={handelDiscountInput}  required placeholder="Discount (%)" />
             </td>
             <td>
-                    <Form.Control type="text" className='default-inputField' value={discountAmt}   {...register("discountAmt")} readOnly />
+                    <Form.Control type="text" name='discountAmt' className='default-inputField' value={discountAmt}    readOnly />
             </td>
             <td>
-                    <Form.Control type="text" className='default-inputField' value={finalBasicCost}   {...register("finalBasicCost")} readOnly />
+                    <Form.Control type="text" name='finalBasicCost' className='default-inputField' value={finalBasicCost}  readOnly />
             </td>
             <td>
-                <Form.Control type="text" name='taxes'  {...register("Taxes")} onChange={handelTaxesChange} value={texes}  placeholder="Taxes(%)" />
+                <Form.Control type="text" name='texes'  onChange={handelTaxesChange}  required placeholder="Taxes(%)" />
             </td>
             <td>
-                <Form.Control type="text" className='default-inputField' value={taxesAmt}   {...register("taxesAmt")} readOnly />
+                <Form.Control type="text" name='taxesAmt' className='default-inputField' value={taxesAmt} readOnly />
             </td>
             <td>
-                <Form.Control type="text" className='default-inputField' value={totalCost}   {...register("totalCost")} readOnly />
+                <Form.Control type="text" name='totalCost' className='default-inputField' value={totalCost} readOnly />
             </td>
             <td>
                 <Button variant="danger" className='me-3' onClick={()=>{setAddItems(false)}} >Delete</Button>
