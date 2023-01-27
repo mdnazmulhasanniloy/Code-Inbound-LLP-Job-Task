@@ -18,7 +18,7 @@ const CustomerSurvey = () => {
     // load all question
     
     const { data: Question = [], refetch, isLoading } = useQuery({
-        queryKey: ['http://localhost:2000/allQuestions'],
+        queryKey: ['https://job-task-server-blond.vercel.app/allQuestions'],
         queryFn: async () => {
             const res = await fetch(`Question.json`)
             const data = await res.json();
@@ -67,7 +67,7 @@ const CustomerSurvey = () => {
 
 
 
-        fetch(`http://localhost:2000/customerSurvey`, {
+        fetch(`https://job-task-server-blond.vercel.app/customerSurvey`, {
         method: 'POST',
         headers:{
             'content-type' : 'application/json'
@@ -100,6 +100,8 @@ const CustomerSurvey = () => {
     if(isLoading){
         return(<h1 className='text-5xl text-red text-center'>Loading...</h1>)
      }
+
+     
      
      
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
 import Table from 'react-bootstrap/Table';
 import  Button  from 'react-bootstrap/Button';
@@ -22,12 +22,29 @@ const Order = () => {
     const { data: items = [], refetch, isLoading } = useQuery({
         queryKey: ['items'],
         queryFn: async () => {
-            const res = await fetch(`http://localhost:2000/items`)
+            const res = await fetch(`https://job-task-server-blond.vercel.app/items`)
             const data = await res.json();
             return data;
         }
     })
 
+
+    // total amount calculation
+    useEffect(() => {
+        if(items.length){
+            let newBasicCost = 0;
+            let newTaxableAmt = 0;
+            items.map((item) =>{
+                newBasicCost += parseInt(item.totalCost);
+                newTaxableAmt += parseInt(item.taxesAmt);
+            });
+
+            setTotalBasicCost(newBasicCost);
+            setTaxableAmt(newTaxableAmt);
+            setTotalCost(newBasicCost + newTaxableAmt);
+        }
+
+    },[items])
 
 
     //New Items Add
@@ -63,7 +80,7 @@ const Order = () => {
         }
         console.log(itemData);
 
-        fetch(`http://localhost:2000/ItemsAdd`, {
+        fetch(`https://job-task-server-blond.vercel.app/ItemsAdd`, {
         method: 'POST',
         headers:{
             'content-type' : 'application/json'
@@ -86,14 +103,13 @@ const Order = () => {
     });
   
     };
-    let totalcosts = 0;
     //Items delete
     const HandelDelete = (id) =>{
         
         if (window.confirm('Are you sure you want to delete') === true) {
             setLoader(true)
             
-            fetch(`http://localhost:2000/items/delete/${id}`, {
+            fetch(`https://job-task-server-blond.vercel.app/items/delete/${id}`, {
     
                 method: 'DELETE',
     
@@ -116,17 +132,16 @@ const Order = () => {
 
     }
 
-   
-
      if(isLoading){
         return(<h1 className='text-5xl text-red text-center'>Loading...</h1>)
      }
      items.filter(item => item.totalCost)
+
+     
     
     return (
-        <div className='mt-5' style={{height: '100vh', width: '100%'}}>
+        <div className='mt-5' style={{height: '120vh', width: '100%'}}>
         <div className="">
-                Total Basic Cost: {totalBasicCost}
         </div>
             <div className="mx-auto" style={{width: '80%'}}>
 
@@ -143,30 +158,14 @@ const Order = () => {
                   <tbody>
                   {
                         items.length > 0 && 
-                        // items.map((item, i) => <tr key={i}>
-                        //     <td>{i+1} </td>
-                        //     <td>{item?.itemName} </td>
-                        //     <td>{item?.rate} </td>
-                        //     <td>{item?.quantity} </td>
-                        //     <td>{item?.basicCost} </td>
-                        //     <td>{item?.discount} </td>
-                        //     <td>{item?.discountAmt} </td>
-                        //     <td>{item?.finalBasicCost} </td>
-                        //     <td>{item?.texes} </td>
-                        //     <td>{item?.taxesAmt} </td>
-                        //     <td>{item?.totalCost} </td>
-                        //     {
-                        //         console.log(totalBasicCost + parseInt(item?.totalCost))
-                        //     }
-                        //     <td><Button variant="danger" className='me-3' onClick={()=>HandelDelete(item?._id)} >Delete</Button></td>
-                        //   </tr>)
+                       
                         items.map((item, i) => <TableBody item={item}
                                                 HandelDelete={HandelDelete}
-                                                taxableAmt={taxableAmt}
-                                                setTaxableAmt={setTaxableAmt}
-                                                totalBasicCost={totalBasicCost}
                                                 setTotalBasicCost={setTotalBasicCost}
-                                                totalcosts={totalcosts}
+                                                setTaxableAmt={setTaxableAmt}
+                                                taxableAmt={taxableAmt}
+                                                totalBasicCost={totalBasicCost}
+                                                items={items}
                                                  i={i} key={i} />)
                   },
                         
@@ -187,7 +186,7 @@ const Order = () => {
                 </div>
                 </form>
 
-                <div className="flex flex-column justify-content-end mb-3">
+                <div className="d-flex flex-column justify-content-end mb-3">
                     <h2 className='text-3xl '>Total Basic Cost: {totalBasicCost}</h2>
                     <h2 className='text-3xl '>Taxable Amt: {taxableAmt}</h2>
                     <h2 className='text-3xl '>Total Cost: {totalCost}</h2>

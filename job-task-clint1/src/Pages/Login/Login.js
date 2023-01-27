@@ -142,7 +142,7 @@ const handleGithubLogin = () => {
                             <Link className='mt-3' to='/forgetPassword'>Forget password?</Link>
                             <div className='mt-4'>
                                 <button className='spatial-btn w-100 border-0' type="Submit" > {
-                                  loader? <> <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                  loader? <> <span class="spinner-grow shadow-lg spinner-grow-sm" role="status" aria-hidden="true"></span>
                                   Loading...</> :'Login'} </button>
                             </div>
                     </Form>

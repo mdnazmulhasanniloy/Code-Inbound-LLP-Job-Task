@@ -5,7 +5,7 @@ import  Button  from 'react-bootstrap/Button';
  
 
 
-const TableBody = ({item, i, HandelDelete, totalBasicCost, totalcosts, setTotalBasicCost, taxableAmt, setTaxableAmt,}) => {
+const TableBody = ({item, i, HandelDelete,}) => {
 
   
 
@@ -22,9 +22,6 @@ const TableBody = ({item, i, HandelDelete, totalBasicCost, totalcosts, setTotalB
       taxesAmt,
       totalCost,
   } = item;
-  console.log(totalCost)
-  // totalcosts += parseInt(totalCost);
-  // setTotalBasicCost(totalBasicCost + parseInt(totalCost));
  
   return (
     <tr>
